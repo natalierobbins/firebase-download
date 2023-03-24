@@ -5,6 +5,7 @@ def confirm_files(selected):
   print("\n---------\nBelow are the selected files for download. If you would like to change your files, run this code block again before downloading.\n")
   for blob in selected:
     print(blob.name)
+  return(selected)
 
 def select_files(app):
   blobs = list(storage.bucket(app=app).list_blobs())

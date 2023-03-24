@@ -1,10 +1,12 @@
+import firebase_admin
+from firebase_admin import credentials, storage
+
 def confirm_files(selected):
   print("\n---------\nBelow are the selected files for download. If you would like to change your files, run this code block again before downloading.\n")
   for blob in selected:
     print(blob.name)
 
-def select_files():
-  app = firebase_admin.get_app(name)
+def select_files(app):
   blobs = list(storage.bucket(app=app).list_blobs())
   root_dirs = set()
   nav = []

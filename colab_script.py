@@ -1,6 +1,9 @@
 import firebase_admin
 from firebase_admin import credentials, storage
 from tqdm import tqdm
+import requests
+import io
+import os
 
 def confirm_files(selected):
   print("\n---------\nBelow are the selected files for download. If you would like to change your files, run this code block again before downloading.\n")

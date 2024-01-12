@@ -72,7 +72,28 @@ def select_files(app):
 
   return selected_blobs
 
-def firebase_download(selected_blobs, data_directory):
+def get_selected(tree):
+  filenames = []
+  traverse(tree.selected_nodes[0], filenames)
+  return filenames
+  
+def traverse(curr_node, filenames):
+  # if not leaf node
+  if bool(curr_node.nodes):
+    for node in curr_node.nodes:
+      traverse(node, filenames)
+  # leaf node yippee
+  else:
+    filenames.append(curr_node.name)
+
+def firebase_download(app, filenames, data_directory):
+  
+  blobs = list(storage.bucket(app=app).list_blobs())
+  selected_blobs = []
+  for blob in blobs:
+    if blob.name.split('/')[-1] in filenames:
+      selected_blobs.append(blob)
+  
   failed = []
   print("Note that it may take a few seconds for the downloaded files to upload to your Google Drive\n")
   for blob in tqdm(list(selected_blobs), desc="Downloading files..."):

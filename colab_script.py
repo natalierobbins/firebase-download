@@ -4,6 +4,9 @@ from tqdm import tqdm
 import requests
 import io
 import os
+from ipytree import Tree, Node
+from google.colab import output
+from collections import defaultdict
 
 def confirm_files(selected):
   print("\n---------\nBelow are the selected files for download. If you would like to change your files, run this code block again before downloading.\n")
@@ -86,3 +89,41 @@ def firebase_download(selected_blobs, data_directory):
   print('\n')
   for failure in failed:
     print(f"""!!! Unable to download: {failure}""")
+    
+def collapse(curr_node):
+  curr_node.opened = False
+  for node in curr_node.nodes:
+    collapse(node)
+    
+def build_tree(app):
+
+  tree = Tree(stripes=True, multiple_selection=False)
+  blobs = list(storage.bucket(app=app).list_blobs())
+
+  tree.nodes = []
+
+  files = defaultdict(list)
+  more_files = defaultdict(list)
+
+  file_tree = []
+
+  file_paths = list(filter(lambda x : x[0][0] != '_' and x[-1] != '', [blob.name.split('/') for blob in blobs]))
+  files_at = file_paths
+
+  for file_path in file_paths:
+    curr_dir = file_path[:-1]
+    curr_file = file_path[-1]
+    files['/'.join(curr_dir)].append(Node(curr_file))
+
+  for file_path in files.keys():
+    curr_dir = file_path.split('/')[:-1]
+    curr_file = file_path.split('/')[-1]
+    more_files['/'.join(curr_dir)].append(Node('/'.join(curr_file), files[file_path]))
+
+  for dir in more_files.keys():
+    new_node = Node(dir, more_files[dir])
+    tree.add_node(new_node)
+  
+  collapse(tree)
+  
+  return tree

@@ -68,6 +68,12 @@ from collections import defaultdict
 #         selected_blobs.append(blob)
 
 #   return selected_blobs
+
+def cred_secrets():
+  return ['auth_provider_x509_cert_url', 'auth_uri', 'client_email', 
+          'client_id', 'client_x509_cert_url', 'private_key',
+          'private_key_id', 'project_id', 'token_uri', 'type', 
+          'universe_domain']
   
 def traverse(curr_node, filenames):
   # if not leaf node

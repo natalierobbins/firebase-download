@@ -71,11 +71,6 @@ def select_files(app):
         selected_blobs.append(blob)
 
   return selected_blobs
-
-def get_selected(tree):
-  filenames = []
-  traverse(tree.selected_nodes[0], filenames)
-  return filenames
   
 def traverse(curr_node, filenames):
   # if not leaf node
@@ -85,6 +80,11 @@ def traverse(curr_node, filenames):
   # leaf node yippee
   else:
     filenames.append(curr_node.name)
+    
+def get_selected(tree):
+  filenames = []
+  traverse(tree.selected_nodes[0], filenames)
+  return filenames
 
 def firebase_download(app, filenames, data_directory):
   
